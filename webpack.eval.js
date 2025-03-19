@@ -1,6 +1,12 @@
-const path = require("path");
-const webpack = require("webpack");
-module.exports = (env, argv) => {
+import path from "path";
+import { fileURLToPath } from "url";
+import webpack from "webpack";
+
+// Create equivalents for __dirname and __filename which aren't available in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default () => {
   console.log("ENV:", process.env.NODE_ENV);
 
   const isDev = process.env.NODE_ENV !== "production" ? true : false;

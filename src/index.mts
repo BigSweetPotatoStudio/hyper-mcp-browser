@@ -43,7 +43,7 @@ const __dirname = dirname(__filename);
 
 let browser: Browser;
 
-async function createBrowser() {
+async function createBrowser(log = false) {
   if (browser) {
     return;
   }
@@ -51,7 +51,7 @@ async function createBrowser() {
   if (isUseLoacl) {
     try {
       let launcher = await ChromeLauncher.launch({
-        startingUrl: "https://github.com/BigSweetPotatoStudio/HyperChat",
+        // startingUrl: "https://github.com/BigSweetPotatoStudio/HyperChat",
         userDataDir: false,
         port: 9222,
         ignoreDefaultFlags: true,
@@ -68,10 +68,7 @@ async function createBrowser() {
     browserURL = Hyper_browserURL;
   }
 
-  console.log("browserURL", browserURL);
-
-  // let json = await fetch(`${browserURL}/json/version`).then((r) => r.json());
-  // console.log("json", json);
+  log && console.log("browserURL", browserURL);
 
   browser = await new Promise(async (resolve, reject) => {
     let t = setTimeout(() => {
@@ -88,14 +85,14 @@ async function createBrowser() {
     clearTimeout(t);
     resolve(b);
   });
-  console.log("browser connected");
+  log && console.log("browser connected");
   return browser;
   // let testPage = await browser.newPage();
   // await testPage.goto("https://www.google.com/search?q=hello");
   // await testPage.close();
 }
 
-createBrowser()
+createBrowser(true)
   .then(async (browser) => {
     // let testPage = await browser.newPage();
     // await testPage.goto("https://www.google.com/search?q=hello");
@@ -216,8 +213,6 @@ for (let a of arr) {
     };
   }
 );
-
-
 
 async function executeClientScript<T>(page: Page, script: string): Promise<T> {
   try {
