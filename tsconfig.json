@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": false,
+        "composite": false,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "jsx": "react",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "removeComments": false,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "strict": false,
+        "strictNullChecks": false,
+        "outDir": "./js",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "types": [
+            "node"
+        ],
+        "target": "ESNext",
+        "typeRoots": [
+            "./node_modules/@types"
+        ],
+    },
+    "include": [
+        "src",
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
