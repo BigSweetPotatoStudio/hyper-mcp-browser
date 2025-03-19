@@ -59,7 +59,7 @@ async function createBrowser() {
         // handleSIGINT: true,
         logLevel: "silent",
       });
-      console.log("Chrome debugging port: " + launcher.port);
+      // console.log("Chrome debugging port: " + launcher.port);
       browserURL = `http://localhost:${launcher.port}`;
     } catch (e) {
       console.error(e);
@@ -105,7 +105,7 @@ createBrowser()
     console.error(e);
   });
 
-const server = new McpServer({
+export const server = new McpServer({
   name: "hyper-mcp-browser",
   version: "1.0.0",
 });
@@ -217,9 +217,7 @@ for (let a of arr) {
   }
 );
 
-const transport = new StdioServerTransport();
-console.log("Server start");
-await server.connect(transport);
+
 
 async function executeClientScript<T>(page: Page, script: string): Promise<T> {
   try {
