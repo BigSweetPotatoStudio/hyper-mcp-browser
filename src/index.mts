@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import puppeteer, { Browser, Page, Puppeteer } from "puppeteer-core";
 import * as ChromeLauncher from "chrome-launcher";
 import {
