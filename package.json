@@ -1,6 +1,6 @@
 {
   "name": "hyper-mcp-browser",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "main": "js/index.mjs",
   "type": "module",
   "bin": {
