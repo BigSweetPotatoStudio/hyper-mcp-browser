@@ -11,8 +11,8 @@ import path from "path";
 import fetch from "node-fetch-native";
 
 console.log("start hyper-mcp-browser!");
-let PORT = process.env.Hyper_Browser_PORT || 9222;
-let HOST = process.env.Hyper_Browser_HOST || "127.0.0.1";
+
+let Hyper_browserURL = process.env.Hyper_browserURL || "http://localhost:9222";
 let isUseLoacl = process.env.Hyper_isUseLoacl != "false" || true;
 let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
 
@@ -65,7 +65,7 @@ async function createBrowser() {
       console.error(e);
     }
   } else {
-    browserURL = `http://${HOST}:${PORT}`;
+    browserURL = Hyper_browserURL;
   }
 
   console.log("browserURL", browserURL);
