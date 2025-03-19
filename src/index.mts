@@ -11,10 +11,12 @@ import path from "path";
 import fetch from "node-fetch-native";
 
 console.log("start hyper-mcp-browser!");
-let PORT = 9222;
-let HOST = "127.0.0.1";
-let isUseRemote = false;
+let PORT = process.env.Hyper_Browser_PORT || 9222;
+let HOST = process.env.Hyper_Browser_HOST || "127.0.0.1";
+let isUseLoacl = process.env.Hyper_isUseLoacl != "false" || true;
+let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
 
+// console.log("searchEngine", searchEngine);
 const newFlags = ChromeLauncher.Launcher.defaultFlags().filter(
   (flag) => flag !== "--disable-extensions" && flag !== "--mute-audio"
 );
@@ -46,9 +48,7 @@ async function createBrowser() {
     return;
   }
   let browserURL;
-  if (isUseRemote) {
-    browserURL = `http://${HOST}:${PORT}`;
-  } else {
+  if (isUseLoacl) {
     try {
       let launcher = await ChromeLauncher.launch({
         startingUrl: "https://github.com/BigSweetPotatoStudio/HyperChat",
@@ -64,6 +64,8 @@ async function createBrowser() {
     } catch (e) {
       console.error(e);
     }
+  } else {
+    browserURL = `http://${HOST}:${PORT}`;
   }
 
   console.log("browserURL", browserURL);
@@ -87,11 +89,22 @@ async function createBrowser() {
     resolve(b);
   });
   console.log("browser connected");
-
+  return browser;
   // let testPage = await browser.newPage();
   // await testPage.goto("https://www.google.com/search?q=hello");
   // await testPage.close();
 }
+
+createBrowser()
+  .then(async (browser) => {
+    // let testPage = await browser.newPage();
+    // await testPage.goto("https://www.google.com/search?q=hello");
+    // await testPage.close();
+  })
+  .catch((e) => {
+    console.error(e);
+  });
+
 const server = new McpServer({
   name: "hyper-mcp-browser",
   version: "1.0.0",
@@ -137,14 +150,39 @@ server.tool(
     if (browser == null) {
       await createBrowser();
     }
+    let res = "";
     let page = await browser.newPage();
-    await page.goto(
-      `https://www.google.com/search?q=` + encodeURIComponent(words)
-    );
-    await Promise.race([page.waitForNetworkIdle(), sleep(3000)]);
-    let res = await executeClientScript(
-      page,
+    if (searchEngine == "bing") {
+      await page.goto(
+        `https://www.bing.com/search?q=` + encodeURIComponent(words)
+      );
+      await Promise.race([page.waitForNetworkIdle(), sleep(3000)]);
+      res = await executeClientScript(
+        page,
+        `
+      let resArr = [];
+
+let arr = document.querySelectorAll("#b_results .b_algo");
+
+for (let x of arr) {
+      resArr.push({
+        title: x.querySelector("h2").innerText,
+        url: x.querySelector("h2 a").href,
+        description: x.querySelector("p").innerText,
+      });
+}
+  resolve(resArr);
       `
+      );
+      await page.close();
+    } else {
+      await page.goto(
+        `https://www.google.com/search?q=` + encodeURIComponent(words)
+      );
+      await Promise.race([page.waitForNetworkIdle(), sleep(3000)]);
+      res = await executeClientScript(
+        page,
+        `
       let resArr = [];
 
 let arr = document.querySelector("#search").querySelectorAll("span>a");
@@ -170,8 +208,9 @@ for (let a of arr) {
 }
   resolve(resArr);
       `
-    );
-    await page.close();
+      );
+      await page.close();
+    }
     return {
       content: [{ type: "text", text: JSON.stringify(res) }],
     };
