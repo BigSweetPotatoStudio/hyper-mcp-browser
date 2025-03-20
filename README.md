@@ -2,7 +2,10 @@
 hyper-mcp-browser
 ```
 
+## 功能
 
+1.总结页面
+2.谷歌、bing搜索
 
 ## 普通安装
 
@@ -26,6 +29,10 @@ env:
 
 ## 使用图片
 
+
+https://github.com/user-attachments/assets/5d963741-1384-4915-bcc6-6b1248294be0
+
+![image](https://github.com/user-attachments/assets/f92221bf-e273-4fdb-aa18-e98f7866dc1d)
 
 
 
