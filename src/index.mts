@@ -19,7 +19,9 @@ let isUseLoacl = process.env.Hyper_isUseLoacl != "false" || true;
 // 搜索引擎
 let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
 // 起始页
-let startingUrl = process.env.Hyper_startingUrl || "https://github.com/BigSweetPotatoStudio/HyperChat";
+let startingUrl =
+  process.env.Hyper_startingUrl ||
+  "https://github.com/BigSweetPotatoStudio/HyperChat";
 
 const newFlags = ChromeLauncher.Launcher.defaultFlags().filter(
   (flag) => flag !== "--disable-extensions" && flag !== "--mute-audio"
@@ -83,12 +85,22 @@ async function createBrowser(log = false) {
         )
       );
     }, 3000);
-    let b = await puppeteer.connect({
-      defaultViewport: null,
-      browserURL: browserURL,
-    });
-    clearTimeout(t);
-    resolve(b);
+    await puppeteer
+      .connect({
+        defaultViewport: null,
+        browserURL: browserURL,
+      })
+      .then((b) => {
+        clearTimeout(t);
+        resolve(b);
+      })
+      .catch((e) => {
+        reject(
+          new Error(
+            "failed connect to browser, please close the browser, then try again"
+          )
+        );
+      });
   });
   log && console.log("browser connected");
 
@@ -98,15 +110,12 @@ async function createBrowser(log = false) {
   // await testPage.close();
 }
 
-createBrowser(true)
-  .then(async (browser) => {
-    // let testPage = await browser.newPage();
-    // await testPage.goto("https://www.google.com/search?q=hello");
-    // await testPage.close();
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+// createBrowser(true)
+//   .then(async (browser) => {
+//   })
+//   .catch((e) => {
+//     console.error(e);
+//   });
 
 export const server = new McpServer({
   name: "hyper-mcp-browser",
