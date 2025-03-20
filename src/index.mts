@@ -12,11 +12,15 @@ import fetch from "node-fetch-native";
 
 console.log("start hyper-mcp-browser!");
 
+// 连接浏览器的远程调试端口
 let Hyper_browserURL = process.env.Hyper_browserURL || "http://localhost:9222";
+// 是否使用本地浏览器，如果为false则使用设置的端口调试浏览器
 let isUseLoacl = process.env.Hyper_isUseLoacl != "false" || true;
+// 搜索引擎
 let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
+// 起始页
+let startingUrl = process.env.Hyper_startingUrl || "https://github.com/BigSweetPotatoStudio/HyperChat";
 
-// console.log("searchEngine", searchEngine);
 const newFlags = ChromeLauncher.Launcher.defaultFlags().filter(
   (flag) => flag !== "--disable-extensions" && flag !== "--mute-audio"
 );
@@ -48,15 +52,16 @@ async function createBrowser(log = false) {
     return;
   }
   let browserURL;
+  let launcher;
   if (isUseLoacl) {
     try {
-      let launcher = await ChromeLauncher.launch({
-        // startingUrl: "https://github.com/BigSweetPotatoStudio/HyperChat",
+      launcher = await ChromeLauncher.launch({
+        startingUrl: startingUrl,
         userDataDir: false,
         port: 9222,
         ignoreDefaultFlags: true,
         chromeFlags: newFlags,
-        // handleSIGINT: true,
+        handleSIGINT: true,
         logLevel: "silent",
       });
       // console.log("Chrome debugging port: " + launcher.port);
@@ -77,7 +82,7 @@ async function createBrowser(log = false) {
           "failed connect to browser, please close the browser, then try again"
         )
       );
-    }, 5000);
+    }, 3000);
     let b = await puppeteer.connect({
       defaultViewport: null,
       browserURL: browserURL,
@@ -86,6 +91,7 @@ async function createBrowser(log = false) {
     resolve(b);
   });
   log && console.log("browser connected");
+
   return browser;
   // let testPage = await browser.newPage();
   // await testPage.goto("https://www.google.com/search?q=hello");
