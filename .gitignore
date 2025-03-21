@@ -6,4 +6,3 @@ tests/
 *.log
 src/*.js
 js/
-src/tests/
