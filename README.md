@@ -24,7 +24,11 @@ env:
     let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
     // 起始页
     let startingUrl = process.env.Hyper_startingUrl || "https://github.com/BigSweetPotatoStudio/HyperChat";
-
+    // （可选）浏览器默认路径
+    // * the `CHROME_PATH` env variable will be used if set. (`LIGHTHOUSE_CHROMIUM_PATH` is deprecated)
+    // * Otherwise, a detected Chrome Canary will be used if found
+    // * Otherwise, a detected Chrome (stable) will be used
+    let CHROME_PATH = process.env.CHROME_PATH || undefined;
 ```
 
 ## 使用图片

@@ -9,8 +9,8 @@ import { z } from "zod";
 import fs from "fs";
 import path from "path";
 import fetch from "node-fetch-native";
-
-console.log("start hyper-mcp-browser!");
+import pack from "../package.json";
+console.log("start hyper-mcp-browser!", pack.version);
 
 // 连接浏览器的远程调试端口
 let Hyper_browserURL = process.env.Hyper_browserURL || "http://localhost:9222";
@@ -22,6 +22,13 @@ let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
 let startingUrl =
   process.env.Hyper_startingUrl ||
   "https://github.com/BigSweetPotatoStudio/HyperChat";
+// （可选）浏览器默认路径
+// (optional) Explicit path of intended Chrome binary
+// * If this `chromePath` option is defined, it will be used.
+// * Otherwise, the `CHROME_PATH` env variable will be used if set. (`LIGHTHOUSE_CHROMIUM_PATH` is deprecated)
+// * Otherwise, a detected Chrome Canary will be used if found
+// * Otherwise, a detected Chrome (stable) will be used
+let CHROME_PATH = process.env.CHROME_PATH || undefined;
 
 const newFlags = ChromeLauncher.Launcher.defaultFlags().filter(
   (flag) => flag !== "--disable-extensions" && flag !== "--mute-audio"
@@ -31,6 +38,16 @@ import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// createBrowser(true)
+//   .then(async (browser) => {
+//     let testPage = await browser.newPage();
+//     await testPage.goto("https://www.google.com/search?q=hello");
+//     await testPage.close();
+//   })
+//   .catch((e) => {
+//     console.error(e);
+//   });
 
 // newFlags.push("--no-sandbox");
 // newFlags.push('--headless')
@@ -48,13 +65,12 @@ const __dirname = dirname(__filename);
 // const browserMap = new Map<number, Context>();
 
 let browser: Browser;
-
+let launcher: ChromeLauncher.LaunchedChrome;
 async function createBrowser(log = false) {
   if (browser) {
     return;
   }
   let browserURL;
-  let launcher;
   if (isUseLoacl) {
     try {
       launcher = await ChromeLauncher.launch({
@@ -63,8 +79,10 @@ async function createBrowser(log = false) {
         port: 9222,
         ignoreDefaultFlags: true,
         chromeFlags: newFlags,
-        handleSIGINT: true,
+        // handleSIGINT: true,
         logLevel: "silent",
+        chromePath: CHROME_PATH,
+        // chromePath: "C:\\Users\\0laop\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe",
       });
       // console.log("Chrome debugging port: " + launcher.port);
       browserURL = `http://localhost:${launcher.port}`;
@@ -110,17 +128,19 @@ async function createBrowser(log = false) {
   // await testPage.close();
 }
 
-// createBrowser(true)
-//   .then(async (browser) => {
-//   })
-//   .catch((e) => {
-//     console.error(e);
-//   });
-
 export const server = new McpServer({
   name: "hyper-mcp-browser",
-  version: "1.0.0",
+  version: pack.version,
 });
+
+server.close = async () => {
+  if (browser) {
+    browser.close();
+  }
+  if (launcher) {
+    launcher.kill();
+  }
+};
 
 // Add an addition tool
 server.tool(
