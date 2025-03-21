@@ -66,9 +66,9 @@ const __dirname = dirname(__filename);
 
 let browser: Browser;
 let launcher: ChromeLauncher.LaunchedChrome;
-async function createBrowser(log = false) {
+export async function createBrowser(log = false) {
   if (browser) {
-    return;
+    return browser;
   }
   let browserURL;
   if (isUseLoacl) {
