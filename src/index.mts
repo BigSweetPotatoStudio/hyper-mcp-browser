@@ -9,7 +9,7 @@ import { z } from "zod";
 import fs from "fs";
 import path from "path";
 import fetch from "node-fetch-native";
-import pack from "../package.json";
+import pack from "../package.json" assert { type: "json" };
 console.log("start hyper-mcp-browser!", pack.version);
 
 // 连接浏览器的远程调试端口
