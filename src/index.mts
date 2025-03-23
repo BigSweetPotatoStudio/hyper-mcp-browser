@@ -9,8 +9,8 @@ import { z } from "zod";
 import fs from "fs";
 import path from "path";
 import fetch from "node-fetch-native";
-import pack from "../package.json" assert { type: "json" };
-console.log("start hyper-mcp-browser!", pack.version);
+
+console.log("start hyper-mcp-browser!");
 
 // 连接浏览器的远程调试端口
 let Hyper_browserURL = process.env.Hyper_browserURL || "http://localhost:9222";
@@ -130,7 +130,7 @@ export async function createBrowser(log = false) {
 
 export const server = new McpServer({
   name: "hyper-mcp-browser",
-  version: pack.version,
+  version: "1.0.0",
 });
 
 server.close = async () => {

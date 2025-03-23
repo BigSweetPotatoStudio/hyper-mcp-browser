@@ -56,7 +56,7 @@ export default () => {
     output: {
       filename: "[name].js", // 使用 contenthash 作为文件名的一部分
       chunkFilename: "[name].js", // 对于动态导入的模块
-      path: path.resolve(__dirname, "./js/src/"),
+      path: path.resolve(__dirname, "./js/"),
     },
     mode: isDev ? "development" : "production",
     devtool: false,
