@@ -15,7 +15,7 @@ console.log("start hyper-mcp-browser!");
 // 连接浏览器的远程调试端口
 let Hyper_browserURL = process.env.Hyper_browserURL || "http://localhost:9222";
 // 是否使用本地浏览器，如果为false则使用设置的端口调试浏览器
-let isAutoLauncher = process.env.Hyper_isAutoLauncher != "false" || true;
+let isAutoLauncher = process.env.Hyper_isAutoLauncher != "false";
 // 搜索引擎
 let searchEngine = process.env.Hyper_SEARCH_ENGINE || "google";
 // 起始页
