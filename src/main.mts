@@ -3,7 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { server } from "./index.mjs";
 
 if (process.env.hyper_dev) {
-  await import("./tests/videoGen.mjs");
+  await import("./website/videoGen.mjs");
 }
 
 const transport = new StdioServerTransport();
