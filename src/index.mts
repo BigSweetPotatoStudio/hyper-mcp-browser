@@ -29,6 +29,8 @@ let startingUrl =
 // * Otherwise, a detected Chrome Canary will be used if found
 // * Otherwise, a detected Chrome (stable) will be used
 let CHROME_PATH = process.env.CHROME_PATH || undefined;
+let userDataDir = process.env.userDataDir || undefined;
+
 
 const newFlags = ChromeLauncher.Launcher.defaultFlags().filter(
   (flag) => flag !== "--disable-extensions" && flag !== "--mute-audio"
@@ -75,7 +77,7 @@ export async function createBrowser(log = false) {
     try {
       launcher = await ChromeLauncher.launch({
         startingUrl: startingUrl,
-        userDataDir: false,
+        userDataDir: userDataDir || false,
         port: 9222,
         ignoreDefaultFlags: true,
         chromeFlags: newFlags,

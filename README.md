@@ -29,6 +29,8 @@ env:
     // * Otherwise, a detected Chrome Canary will be used if found
     // * Otherwise, a detected Chrome (stable) will be used
     let CHROME_PATH = process.env.CHROME_PATH || undefined;
+    // chrome 最近的改动，更改了远程调试开关以提高安全性 https://developer.chrome.com/blog/remote-debugging-port?hl=zh-cn
+    let userDataDir = process.env.userDataDir || undefined;
 ```
 
 ## 使用图片
